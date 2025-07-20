@@ -3,4 +3,6 @@
 
 学習中に苦労した点
 <br>
-1.SPAでページ遷移をする方法がわからなかった(トップページの要素を残したままTodoListページに遷移してしまう)→React Routerを使用して解決
+1.SPAでページ遷移をする方法がわからなかった(トップページの要素を残したままTodoListページに遷移してしまう)→React Routerを使用、タグを外に出して解決
+<br>
+2.ルーティング用のApp.jsxファイルとトップページ用のHome.jsxファイルを分けたらトップページが真っ白に→App.jsx側でHomeのimport漏れ、Home.jsx側でHomeのexport漏れが原因だった
