@@ -11,7 +11,7 @@ function Home() {
       <section>
         <h2>制作物一覧（準備中）</h2>
         <nav>
-          <Link to="/TodoList">✅ ToDoアプリ（公開予定）</Link>
+          <Link to="/TodoList">✅ ToDoリスト（公開予定）</Link>
           <br />
           <Link to="/bbs">✅ 掲示板アプリ（公開予定）</Link>
           <br />
