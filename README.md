@@ -1,12 +1,8 @@
-# React + Vite
+フロントエンドエンジニアを目指して学習中のポートフォリオサイトです。  
+制作物は順次公開予定です。 
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
-
-Currently, two official plugins are available:
-
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+学習中に苦労した点
+<br>
+1.SPAでページ遷移をする方法がわからなかった(トップページの要素を残したままTodoListページに遷移してしまう)→React Routerを使用、タグを外に出して解決
+<br>
+2.ルーティング用のApp.jsxファイルとトップページ用のHome.jsxファイルを分けたらトップページが真っ白に→App.jsx側でHomeのimport漏れ、Home.jsx側でHomeのexport漏れが原因だった
