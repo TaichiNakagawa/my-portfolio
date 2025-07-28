@@ -1,7 +1,7 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Header from './components/Header';
 import Home from './pages/Home';
-import TodoList from './pages/TodoList';
+import { TodoList }  from './pages/TodoList';
 import Bbs from './pages/bbs';
 import Weather from './pages/weather';
 import './App.css'
