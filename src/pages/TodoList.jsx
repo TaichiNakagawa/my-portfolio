@@ -1,26 +1,44 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { db } from '../firebase'; 
+import { collection, addDoc, onSnapshot, deleteDoc, doc, updateDoc } from 'firebase/firestore';
 
 export const TodoList = () => {
   const [task, setTask] = useState('');
   const [todos, setTodos] = useState([]);
 
-  const handleSubmit = (e) => {
+  // Firestoreからリアルタイムでデータを取得
+  useEffect(() => {
+    const unsubscribe = onSnapshot(collection(db, 'todos'), (snapshot) => {
+      const fetchedTodos = snapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      setTodos(fetchedTodos);
+    });
+
+    return () => unsubscribe(); // クリーンアップ
+  }, []);
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!task.trim()) return;
-    setTodos([...todos, { text: task, completed: false }]);
+
+    await addDoc(collection(db, 'todos'), {
+      text: task,
+      completed: false,
+    });
+
     setTask('');
   };
 
-  const toggleComplete = (index) => {
-    const newTodos = [...todos];
-    newTodos[index].completed = !newTodos[index].completed;
-    setTodos(newTodos);
+  const toggleComplete = async (todo) => {
+    await updateDoc(doc(db, 'todos', todo.id), {
+      completed: !todo.completed,
+    });
   };
 
-  const deleteTodo = (index) => {
-    const newTodos = [...todos];
-    newTodos.splice(index, 1);
-    setTodos(newTodos);
+  const deleteTodo = async (id) => {
+    await deleteDoc(doc(db, 'todos', id));
   };
 
   return (
@@ -36,15 +54,15 @@ export const TodoList = () => {
         <button type="submit">追加</button>
       </form>
       <ul>
-        {todos.map((todo, index) => (
-          <li key={index}>
+        {todos.map((todo) => (
+          <li key={todo.id}>
             <span
-              style={{ textDecoration: todo.completed ? 'line-through' : 'none' }}
-              onClick={() => toggleComplete(index)}
+              style={{ textDecoration: todo.completed ? 'line-through' : 'none', cursor: 'pointer' }}
+              onClick={() => toggleComplete(todo)}
             >
               {todo.text}
             </span>
-            <button onClick={() => deleteTodo(index)}>削除</button>
+            <button onClick={() => deleteTodo(todo.id)}>削除</button>
           </li>
         ))}
       </ul>
