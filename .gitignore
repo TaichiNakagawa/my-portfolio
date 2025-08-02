@@ -24,4 +24,4 @@ dist-ssr
 *.sw?
 
 #iddata
-.env
+firebase.env
