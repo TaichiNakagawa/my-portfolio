@@ -1,8 +1,11 @@
 import { Link } from 'react-router-dom';
+import './Home.css';
 
 function Home() {
   return (
-    <div>
+    <div className="home-container">
+      <div className="overlay" />
+      <div className="home-content">
       <header>
         <h1>中川太一 | フロントエンドエンジニア志望</h1>
         <p>フロントエンドエンジニアを目指してWeb制作・React開発を学んでいます。</p>
@@ -23,6 +26,7 @@ function Home() {
         <p>GitHub: <a href="https://github.com/TaichiNakagawa">TaichiNakagawa</a></p>
       </footer>
     </div>
+  </div>
   );
 }
 
