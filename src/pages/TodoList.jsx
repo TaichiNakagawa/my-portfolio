@@ -1,14 +1,19 @@
 import React, { useState, useEffect } from 'react';
-import { db } from '../firebase/firebase'; 
+import { db } from '../firebase/firebase';
 import { collection, addDoc, onSnapshot, deleteDoc, doc, updateDoc } from 'firebase/firestore';
+import { useAuth } from '../firebase/AuthContext.jsx'; // ログインユーザー取得用
 
-export const TodoList = () => {
+const TodoList = () => {
+  const { user } = useAuth(); // ログイン中のユーザー情報
   const [task, setTask] = useState('');
   const [todos, setTodos] = useState([]);
 
-  // Firestoreからリアルタイムでデータを取得
   useEffect(() => {
-    const unsubscribe = onSnapshot(collection(db, 'todos'), (snapshot) => {
+    if (!user) return;
+
+    const userTodosRef = collection(db, 'todos', user.uid, 'items');
+
+    const unsubscribe = onSnapshot(userTodosRef, (snapshot) => {
       const fetchedTodos = snapshot.docs.map(doc => ({
         id: doc.id,
         ...doc.data(),
@@ -16,14 +21,15 @@ export const TodoList = () => {
       setTodos(fetchedTodos);
     });
 
-    return () => unsubscribe(); // クリーンアップ
-  }, []);
+    return () => unsubscribe();
+  }, [user]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!task.trim()) return;
+    if (!task.trim() || !user) return;
 
-    await addDoc(collection(db, 'todos'), {
+    const userTodosRef = collection(db, 'todos', user.uid, 'items');
+    await addDoc(userTodosRef, {
       text: task,
       completed: false,
     });
@@ -32,18 +38,24 @@ export const TodoList = () => {
   };
 
   const toggleComplete = async (todo) => {
-    await updateDoc(doc(db, 'todos', todo.id), {
+    if (!user) return;
+
+    const todoRef = doc(db, 'todos', user.uid, 'items', todo.id);
+    await updateDoc(todoRef, {
       completed: !todo.completed,
     });
   };
 
   const deleteTodo = async (id) => {
-    await deleteDoc(doc(db, 'todos', id));
+    if (!user) return;
+
+    const todoRef = doc(db, 'todos', user.uid, 'items', id);
+    await deleteDoc(todoRef);
   };
 
   return (
     <div>
-      <h2>Todo List</h2>
+      <h2>{user?.displayName} さんの Todo List</h2>
       <form onSubmit={handleSubmit}>
         <input
           type="text"
@@ -69,3 +81,5 @@ export const TodoList = () => {
     </div>
   );
 };
+
+export default TodoList;
